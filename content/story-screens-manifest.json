@@ -7,7 +7,7 @@
       "packId": "starter",
       "storyId": "world_of_lorecraft",
       "title": "World of Lorecraft",
-      "assets": { "panelBg": "src/global/versecraft-ui/global-backgrounds/story-wol.webp" }
+      "assets": { "panelBg": "styles/screens/ui/backgrounds/story-panel/lorecraft-narrative-panel.webp" }
     }
   ]
 }
