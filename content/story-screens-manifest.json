@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "containerId": "screensContainer",
+  "storyTemplateId": "tplStoryScreen",
+  "stories": [
+    {
+      "packId": "starter",
+      "storyId": "world_of_lorecraft",
+      "title": "World of Lorecraft",
+      "assets": {
+        "panelBg": "src/global/versecraft-ui/global-backgrounds/story-wol.webp",
+        "soundtrack": "content/packs/starter/audio/wol_theme.mp3"
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "backrooms",
+      "title": "Backrooms",
+      "assets": {
+        "panelBg": "src/global/versecraft-ui/global-backgrounds/story-backrooms.webp",
+        "soundtrack": "content/packs/founders/audio/backrooms_theme.mp3"
+      }
+    }
+  ]
+}
