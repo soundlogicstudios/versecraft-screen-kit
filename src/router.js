@@ -1,46 +1,53 @@
-// VerseCraft Router v0.0.04
-// Responsible ONLY for switching screens (single-screen active)
+/* ======================================================================
+ * File: src/router.js
+ * - Auto-discovers [data-screen] in DOM
+ * ====================================================================== */
+let currentScreen = "";
 
-const SCREENS = ["splash", "tos", "menu", "settings", "library", "library2", "launcher", "story"];
-
-let _current = (location.hash || "").replace("#", "").trim();
-if (!_current || !SCREENS.includes(_current)) _current = "splash";
-
-export function initRouter() {
-  // Allow direct linking via hash (#splash, #tos, #menu, #library, #library2, #launcher, etc.)
-  const hash = (location.hash || "").replace("#", "").trim();
-  if (hash && SCREENS.includes(hash)) {
-    requestAnimationFrame(() => go(hash));
-  }
+function knownScreens() {
+  return new Set(
+    Array.from(document.querySelectorAll("[data-screen]"))
+      .map((el) => (el.getAttribute("data-screen") || "").trim())
+      .filter(Boolean)
+  );
 }
 
-export function getCurrentScreen() {
-  return _current;
-}
-
-export function go(screenId) {
-  if (!SCREENS.includes(screenId)) return;
-
-  const from = _current;
-  const to = screenId;
-  _current = to;
-
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.remove("active");
-  });
-
+function setActiveScreen(screenId) {
+  document.querySelectorAll(".screen").forEach((el) => el.classList.remove("active"));
   const next = document.querySelector(`[data-screen="${screenId}"]`);
-  if (next) {
-    next.classList.add("active");
+  if (next) next.classList.add("active");
+}
+
+export function initRouter({ defaultScreen = "splash" } = {}) {
+  const screens = knownScreens();
+  const hash = (location.hash || "").replace("#", "").trim();
+
+  currentScreen = screens.has(hash) ? hash : (screens.has(defaultScreen) ? defaultScreen : "");
+  if (currentScreen) {
+    setActiveScreen(currentScreen);
+    history.replaceState(null, "", `#${currentScreen}`);
   }
+}
 
-  // Keep URL in sync for debugging / reloads
-  history.replaceState(null, "", `#${screenId}`);
+export function go(screenId, state = null) {
+  const screens = knownScreens();
+  if (!screens.has(screenId)) return;
 
-  // Notify debug/telemetry layers (non-blocking)
+  const from = currentScreen;
+  const to = screenId;
+  currentScreen = to;
+
+  setActiveScreen(to);
+  history.replaceState(null, "", `#${to}`);
+
   window.dispatchEvent(
     new CustomEvent("versecraft:navigate", {
-      detail: { from, to },
+      detail: { from, to, state },
     })
   );
 }
+
+export function getCurrentScreen() {
+  return currentScreen;
+}
+
