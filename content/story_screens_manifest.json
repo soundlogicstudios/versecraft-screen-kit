@@ -20,6 +20,60 @@
         "panelBg": "./styles/screens/ui/backgrounds/story-panel/backrooms-narrative-panel.webp",
         "soundtrack": "./content/packs/founders/audio/backrooms_theme.mp3"
       }
+    },
+    {
+      "packId": "founders",
+      "storyId": "timecop",
+      "title": "Timecop",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/timecop-narrative-panel.webp",
+        "soundtrack": ""
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "relic_of_cylara",
+      "title": "Relic of Cylara",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/cylara-narrative-panel.webp",
+        "soundtrack": ""
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "oregon_trail",
+      "title": "Oregon Trail",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/oregontrail-narrative-panel.webp",
+        "soundtrack": ""
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "wastelands",
+      "title": "Wastelands",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/wastelands-narrative-panel.webp",
+        "soundtrack": ""
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "tale_of_icarus",
+      "title": "Tale of Icarus",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/taleoficarus-narrative-panel.webp",
+        "soundtrack": ""
+      }
+    },
+    {
+      "packId": "founders",
+      "storyId": "crimson_seagull",
+      "title": "Crimson Seagull",
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/crimsonseagull-narrative-panel.webp",
+        "soundtrack": ""
+      }
     }
   ]
 }
