@@ -1,5 +1,10 @@
+/* ======================================================================
+ * File: src/app.js
+ * FULL REPLACEMENT (copy/paste)
+ * ====================================================================== */
 // VerseCraft Starter v0.0.05
 // Panel-by-panel navigation baseline + Launcher wired
+// + Option B: Manifest-driven story screens (pack-safe IDs)
 
 import { initRouter, go, getCurrentScreen } from "./router.js";
 import { bindHitboxes } from "./input.js";
@@ -10,6 +15,9 @@ const VERSION = "0.0.05";
 // Library manifest (future-proof)
 const LIBRARY_MANIFEST_URL = "./content/library_manifest.json";
 
+// Story screens manifest (Option B)
+const STORY_SCREENS_MANIFEST_URL = "./content/story_screens_manifest.json";
+
 // Fallback slot order (matches current pre-rendered library art)
 const FALLBACK_LIBRARY_SLOTS = [
   { storyId: "backrooms", title: "Backrooms" },
@@ -19,7 +27,7 @@ const FALLBACK_LIBRARY_SLOTS = [
   { storyId: "oregon_trail", title: "Oregon Trail" },
   { storyId: "wastelands", title: "Wastelands" },
   { storyId: "tale_of_icarus", title: "Tale of Icarus" },
-  { storyId: "crimson_seagull", title: "Crimson Seagull" }
+  { storyId: "crimson_seagull", title: "Crimson Seagull" },
 ];
 
 let librarySlots = null; // loaded from manifest
@@ -37,6 +45,11 @@ function saveKey(packId, storyId) {
 // Story JSON location (locked convention)
 function storyJsonPath(packId, storyId) {
   return `./content/packs/${packId}/stories/${storyId}.json`;
+}
+
+// Pack-safe story screen id (hash-safe)
+function storyScreenId(packId, storyId) {
+  return `story__${packId}__${storyId}`;
 }
 
 // Minimal mapping for launch.
@@ -124,6 +137,96 @@ function showMoreSoonModal() {
   alert("More stories available soon!");
 }
 
+// --- Screen Manager (Option B): build story screens from manifest + <template> ---
+function interpolateTemplate(html, vars) {
+  return html.replace(/\{\{(\w+)\}\}/g, (_, key) => String(vars[key] ?? ""));
+}
+
+async function buildStoryScreensFromManifest() {
+  const res = await fetch(STORY_SCREENS_MANIFEST_URL, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Manifest HTTP ${res.status}`);
+
+  const manifest = await res.json();
+  const containerId = manifest.containerId || "screensContainer";
+  const templateId = manifest.storyTemplateId || "tplStoryScreen";
+
+  const container = document.getElementById(containerId);
+  const tpl = document.getElementById(templateId);
+
+  if (!container) throw new Error(`Missing screens container: #${containerId}`);
+  if (!tpl) throw new Error(`Missing story template: #${templateId}`);
+  if (!Array.isArray(manifest.stories)) return;
+
+  const templateHtml = tpl.innerHTML;
+
+  for (const story of manifest.stories) {
+    const packId = String(story.packId || "").trim();
+    const storyId = String(story.storyId || "").trim();
+    if (!packId || !storyId) continue;
+
+    const screenId = storyScreenId(packId, storyId);
+
+    // Skip if already exists (supports partial static + generated hybrid)
+    if (document.querySelector(`[data-screen="${screenId}"]`)) continue;
+
+    const title = String(story.title || storyId).trim();
+    const panelBg = String(story.assets?.panelBg || "").trim();
+    const soundtrack = String(story.assets?.soundtrack || "").trim();
+
+    const html = interpolateTemplate(templateHtml, {
+      SCREEN_ID: screenId,
+      PACK_ID: packId,
+      STORY_ID: storyId,
+      TITLE: title,
+      PANEL_BG: panelBg,
+      SOUNDTRACK: soundtrack,
+    });
+
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = html.trim();
+    const section = wrapper.firstElementChild;
+    if (section) container.appendChild(section);
+  }
+}
+
+// --- Optional: Action Dispatcher for generated screens (data-action) ---
+// Additive: doesn't break your existing bindHitboxes() wiring.
+function initActionDispatcher() {
+  document.addEventListener("click", (e) => {
+    const el = e.target instanceof Element ? e.target.closest("[data-action]") : null;
+    if (!el) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const action = (el.getAttribute("data-action") || "").trim();
+
+    if (action === "go") {
+      const target = (el.getAttribute("data-target") || "").trim();
+      if (target) go(target);
+      return;
+    }
+
+    if (action === "goStory") {
+      const storyId = (el.getAttribute("data-story-id") || "").trim();
+      const packId =
+        (el.getAttribute("data-pack-id") || "").trim() || getPackIdForStory(storyId);
+
+      if (!storyId) return;
+
+      try {
+        localStorage.setItem(KEY_SELECTED_STORY, storyId);
+        localStorage.setItem(KEY_SELECTED_PACK, packId);
+      } catch {
+        // ignore
+      }
+
+      go(storyScreenId(packId, storyId));
+      return;
+    }
+  });
+}
+
 // --- Launcher rendering ---
 async function loadLauncher() {
   const sel = getSelection();
@@ -175,7 +278,7 @@ async function loadLauncher() {
       if (cover) coverEl.src = cover.startsWith("./") ? cover : `./${cover}`;
       else coverEl.removeAttribute("src");
     }
-  } catch (err) {
+  } catch {
     // JSON missing/misplaced → show a clear message
     if (titleEl) titleEl.textContent = storyId;
     if (blurbEl) blurbEl.textContent = `Missing story JSON at: ${url}`;
@@ -192,8 +295,8 @@ function startSelectedStory() {
 
   // Load story JSON to get the start section ID, then set cursor + clear save.
   fetch(storyJsonPath(packId, storyId), { cache: "no-store" })
-    .then(r => r.json())
-    .then(data => {
+    .then((r) => r.json())
+    .then((data) => {
       const start = data.start || data.startNodeId || "S01";
 
       // Clear existing save for a clean start
@@ -206,11 +309,10 @@ function startSelectedStory() {
         localStorage.setItem("vc_story_cursor", start);
       } catch {}
 
-      go("story");
+      go(storyScreenId(packId, storyId));
     })
     .catch(() => {
-      // If JSON not found, still go story (placeholder)
-      go("story");
+      go(storyScreenId(packId, storyId));
     });
 }
 
@@ -235,48 +337,59 @@ function continueSelectedStory() {
     localStorage.setItem("vc_active_save", save);
   } catch {}
 
-  go("story");
+  go(storyScreenId(packId, storyId));
 }
 
 // --- Library labels (titles on rows) ---
-async function loadLibraryManifest(){
-  try{
+async function loadLibraryManifest() {
+  try {
     const res = await fetch(LIBRARY_MANIFEST_URL, { cache: "no-store" });
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     // Expected: { slots: [ { storyId, title } ... ] }
-    if(Array.isArray(data?.slots) && data.slots.length){
+    if (Array.isArray(data?.slots) && data.slots.length) {
       librarySlots = data.slots;
       return;
     }
-  }catch(_){
+  } catch {
     // ignore, we will use fallback
   }
   librarySlots = null;
 }
 
-function getSlots(){
+function getSlots() {
   return Array.isArray(librarySlots) && librarySlots.length ? librarySlots : FALLBACK_LIBRARY_SLOTS;
 }
 
-function storyForRow(rowIndex){
+function storyForRow(rowIndex) {
   const slots = getSlots();
   return slots[rowIndex] || null;
 }
 
-function populateLibraryLabels(page){
+function populateLibraryLabels(page) {
   // page 1 => rows 0-3, page 2 => rows 4-7
   const start = page === 2 ? 4 : 0;
   const end = start + 4;
-  for(let i=start; i<end; i++){
+  for (let i = start; i < end; i++) {
     const el = document.getElementById(`libLabel${i}`);
     const slot = storyForRow(i);
-    if(el) el.textContent = slot?.title || "";
+    if (el) el.textContent = slot?.title || "";
   }
 }
 
-function boot(){
+async function boot() {
   setFooter();
+
+  // Build manifest-driven story screens BEFORE router init (supports hash deep links)
+  try {
+    await buildStoryScreensFromManifest();
+  } catch {
+    // ignore; app still runs with static screens
+  }
+
+  // Optional: enables [data-action] on generated screens
+  initActionDispatcher();
+
   initRouter();
 
   // Preload manifest for row titles + future expansion
@@ -290,15 +403,9 @@ function boot(){
   // Whenever we navigate TO launcher, populate it.
   window.addEventListener("versecraft:navigate", (e) => {
     const to = e?.detail?.to;
-    if (to === "launcher") {
-      loadLauncher();
-    }
-    if (to === "library") {
-      populateLibraryLabels(1);
-    }
-    if (to === "library2") {
-      populateLibraryLabels(2);
-    }
+    if (to === "launcher") loadLauncher();
+    if (to === "library") populateLibraryLabels(1);
+    if (to === "library2") populateLibraryLabels(2);
   });
 
   bindHitboxes({
@@ -374,7 +481,7 @@ function boot(){
       go("launcher");
     },
 
-    // Story
+    // Story (legacy placeholder screen)
     hbStoryBack: () => go("launcher"),
   });
 
