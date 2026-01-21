@@ -1,10 +1,14 @@
 /* ======================================================================
  * File: src/router.js
- * - Auto-discovers [data-screen] in DOM
+ * FULL REPLACEMENT (copy/paste)
  * ====================================================================== */
-let currentScreen = "";
+// VerseCraft Router v0.0.05+
+// - Responsible ONLY for switching screens (single-screen active)
+// - Auto-discovers screens via [data-screen] (supports manifest-generated screens)
 
-function knownScreens() {
+let _current = (location.hash || "").replace("#", "").trim();
+
+function getKnownScreens() {
   return new Set(
     Array.from(document.querySelectorAll("[data-screen]"))
       .map((el) => (el.getAttribute("data-screen") || "").trim())
@@ -12,42 +16,50 @@ function knownScreens() {
   );
 }
 
-function setActiveScreen(screenId) {
-  document.querySelectorAll(".screen").forEach((el) => el.classList.remove("active"));
-  const next = document.querySelector(`[data-screen="${screenId}"]`);
-  if (next) next.classList.add("active");
+function ensureValidCurrent(defaultScreen = "splash") {
+  const screens = getKnownScreens();
+  if (!_current || !screens.has(_current)) _current = defaultScreen;
 }
 
-export function initRouter({ defaultScreen = "splash" } = {}) {
-  const screens = knownScreens();
+export function initRouter(defaultScreen = "splash") {
+  // Allow direct linking via hash (#splash, #tos, #menu, #story__starter__world_of_lorecraft, etc.)
   const hash = (location.hash || "").replace("#", "").trim();
+  const screens = getKnownScreens();
 
-  currentScreen = screens.has(hash) ? hash : (screens.has(defaultScreen) ? defaultScreen : "");
-  if (currentScreen) {
-    setActiveScreen(currentScreen);
-    history.replaceState(null, "", `#${currentScreen}`);
+  if (hash && screens.has(hash)) {
+    requestAnimationFrame(() => go(hash));
+    return;
   }
-}
 
-export function go(screenId, state = null) {
-  const screens = knownScreens();
-  if (!screens.has(screenId)) return;
-
-  const from = currentScreen;
-  const to = screenId;
-  currentScreen = to;
-
-  setActiveScreen(to);
-  history.replaceState(null, "", `#${to}`);
-
-  window.dispatchEvent(
-    new CustomEvent("versecraft:navigate", {
-      detail: { from, to, state },
-    })
-  );
+  ensureValidCurrent(defaultScreen);
+  requestAnimationFrame(() => go(_current));
 }
 
 export function getCurrentScreen() {
-  return currentScreen;
+  return _current;
+}
+
+export function go(screenId) {
+  const screens = getKnownScreens();
+  if (!screens.has(screenId)) return;
+
+  const from = _current;
+  const to = screenId;
+  _current = to;
+
+  document.querySelectorAll(".screen").forEach((screen) => {
+    screen.classList.remove("active");
+  });
+
+  const next = document.querySelector(`[data-screen="${screenId}"]`);
+  if (next) next.classList.add("active");
+
+  history.replaceState(null, "", `#${screenId}`);
+
+  window.dispatchEvent(
+    new CustomEvent("versecraft:navigate", {
+      detail: { from, to },
+    })
+  );
 }
 
