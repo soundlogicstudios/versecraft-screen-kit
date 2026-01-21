@@ -7,10 +7,10 @@
       "packId": "starter",
       "storyId": "world_of_lorecraft",
       "title": "World of Lorecraft",
-      "assets": {
-        "panelBg": "src/global/versecraft-ui/global-backgrounds/story-wol.webp",
-        "soundtrack": "content/packs/starter/audio/wol_theme.mp3"
-      }
+      "assets": { "panelBg": "src/global/versecraft-ui/global-backgrounds/story-wol.webp" }
+    }
+  ]
+}
     },
     {
       "packId": "founders",
