@@ -17,7 +17,7 @@
       "storyId": "backrooms",
       "title": "Backrooms",
       "assets": {
-        "panelBg": "./src/global/versecraft-ui/global-backgrounds/story-backrooms.webp",
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/backrooms-narrative-panel.webp",
         "soundtrack": "./content/packs/founders/audio/backrooms_theme.mp3"
       }
     }
