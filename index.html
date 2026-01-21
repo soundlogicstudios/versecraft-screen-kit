@@ -201,8 +201,27 @@ Contact: [soundlogicitservices@gmail.com]
 
   <!-- ✅ CHANGE #2: Add a template used by the manifest-driven screen builder -->
   <template id="tplStoryScreen">
-    <section class="screen" data-screen="{{SCREEN_ID}}" aria-label="Story: {{TITLE}}">
-      <img class="screen-bg" alt="Story Panel" src="{{PANEL_BG}}" />
+  <section class="screen" data-screen="{{SCREEN_ID}}" aria-label="Story: {{TITLE}}">
+    <img class="screen-bg" alt="Story Panel" src="{{PANEL_BG}}" />
+
+    <!-- Optional soundtrack hook (safe to ignore for now) -->
+    <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
+
+    <!-- EXIT STORY: uses existing .story-back styling/placement from story.css -->
+    <div class="story-top">
+      <button class="story-back"
+              data-action="go"
+              data-target="launcher"
+              aria-label="Exit Story">Exit Story</button>
+      <div class="story-title">Story</div>
+    </div>
+
+    <!-- Placeholder runtime mount point (for the next step) -->
+    <div class="story-shell">
+      <div class="story-text" data-role="storyText"></div>
+    </div>
+  </section>
+</template>
 
       <!-- Optional soundtrack hook (can stay empty if not used yet) -->
       <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
