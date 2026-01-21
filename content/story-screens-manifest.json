@@ -7,18 +7,18 @@
       "packId": "starter",
       "storyId": "world_of_lorecraft",
       "title": "World of Lorecraft",
-      "assets": { "panelBg": "styles/screens/ui/backgrounds/story-panel/lorecraft-narrative-panel.webp" }
-    }
-  ]
-}
+      "assets": {
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/lorecraft-narrative-panel.webp",
+        "soundtrack": ""
+      }
     },
     {
       "packId": "founders",
       "storyId": "backrooms",
       "title": "Backrooms",
       "assets": {
-        "panelBg": "src/global/versecraft-ui/global-backgrounds/story-backrooms.webp",
-        "soundtrack": "content/packs/founders/audio/backrooms_theme.mp3"
+        "panelBg": "./src/global/versecraft-ui/global-backgrounds/story-backrooms.webp",
+        "soundtrack": "./content/packs/founders/audio/backrooms_theme.mp3"
       }
     }
   ]
