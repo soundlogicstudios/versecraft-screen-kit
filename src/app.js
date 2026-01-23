@@ -182,11 +182,11 @@ async function buildStoryScreensFromManifest() {
       SOUNDTRACK: soundtrack,
     });
 
-    const wrapper = document.createElement("div");
+    /*const wrapper = document.createElement("div");
     wrapper.innerHTML = html.trim();
     const section = wrapper.firstElementChild;
     if (section) container.appendChild(section);
-  }
+  }*/
 }
 
 // --- Optional: Action Dispatcher for generated screens (data-action) ---
