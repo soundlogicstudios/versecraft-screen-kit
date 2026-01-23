@@ -203,16 +203,21 @@ Contact: [soundlogicitservices@gmail.com]
   <section class="screen" data-screen="{{SCREEN_ID}}" aria-label="Story: {{TITLE}}">
     <img class="screen-bg" alt="Story Panel" src="{{PANEL_BG}}" />
 
+    <!-- Optional soundtrack hook -->
     <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
 
-    <!-- Exit hitbox (already works) -->
-    <button class="hitbox vc-exit-hitbox"
-            data-action="go"
-            data-target="launcher"
-            aria-label="Exit Story"></button>
+    <!-- Top strip (matches your Story layout contract) -->
+    <div class="story-top">
+      <!-- Use your existing calibrated hitbox ID -->
+      <button class="hitbox" id="hbStoryBack" data-action="go" data-target="launcher" aria-label="Exit Story"></button>
+      <!-- Visible label (optional; can be styled or hidden) -->
+      <div class="story-title">{{TITLE}}</div>
+    </div>
 
-    <!-- Visible label on top of the hitbox -->
-    <div class="vc-exit-label" aria-hidden="true">Exit</div>
+    <!-- Narrative viewport mount (so engine can inject text later) -->
+    <div class="story-shell">
+      <div class="story-text" data-role="storyText"></div>
+    </div>
   </section>
 </template>
 
