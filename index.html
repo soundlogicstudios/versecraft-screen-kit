@@ -9,20 +9,19 @@
   <title>VerseCraft 2.0</title>
 
   <!-- Build stamp (bump if you need to force-refresh sanity) -->
-  <meta name="build" content="2026-01-13-VC-0.0.06" />
+  <meta name="build" content="2026-01-23-VC-0.0.07" />
 
   <!-- NOTE: No <base> tag. All paths are relative for GitHub Pages safety. -->
-  <link rel="stylesheet" href="./styles/base.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/ui/hitboxes.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/ui/debug.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/screens/launcher.css?v=0.0.06" />
+  <link rel="stylesheet" href="./styles/base.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/ui/hitboxes.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/screens/launcher.css?v=0.0.07" />
 
-  <!-- Screen-specific (mostly stubs today, but keeps the contract) -->
-  <link rel="stylesheet" href="./styles/screens/menu.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/screens/settings.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/screens/library.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/screens/story.css?v=0.0.06" />
-  <link rel="stylesheet" href="./styles/screens/tos.css?v=0.0.06" />
+  <!-- Screen-specific -->
+  <link rel="stylesheet" href="./styles/screens/menu.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/screens/settings.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/screens/library.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/screens/story.css?v=0.0.07" />
+  <link rel="stylesheet" href="./styles/screens/tos.css?v=0.0.07" />
 
   <!-- 🔧 Hotfix overrides: keep label control here so nothing else “ties” to it -->
   <style>
@@ -40,7 +39,7 @@
       text-align: center;
       white-space: nowrap;
       pointer-events: none;
-      z-index: 50;          /* keep it above the ornate frame/art */
+      z-index: 50;
       width: 90%;
       max-width: 90%;
     }
@@ -54,7 +53,7 @@
 
 <body>
   <div id="app">
-    <!-- ✅ CHANGE #1: add id="screensContainer" so manifest screens can be injected -->
+    <!-- ✅ id="screensContainer" so manifest screens can be injected -->
     <div class="screens" id="screensContainer">
 
       <!-- SPLASH -->
@@ -114,7 +113,7 @@ Contact: [soundlogicitservices@gmail.com]
         <button id="hbSettingsTheme" class="hitbox" aria-label="Theme"></button>
       </section>
 
-      <!-- LIBRARY -->
+      <!-- LIBRARY — PAGE 1 -->
       <section id="screen-library" class="screen" data-screen="library" aria-label="Library">
         <img class="screen-bg" alt="Library" src="./backgrounds/ui/global/library-pre-render-page1.webp" />
         <div class="libraryRowLabel" id="libLabel0" data-row="0"></div>
@@ -137,13 +136,34 @@ Contact: [soundlogicitservices@gmail.com]
         <div class="libraryRowLabel" id="libLabel5" data-row="5"></div>
         <div class="libraryRowLabel" id="libLabel6" data-row="6"></div>
         <div class="libraryRowLabel" id="libLabel7" data-row="7"></div>
+
         <button id="hbLibrary2Back" class="hitbox" aria-label="Back to Library Page 1"></button>
+        <button id="hbLibrary2Next" class="hitbox" aria-label="Next Page"></button>
         <button id="hbLibraryMoreSoon" class="hitbox" aria-label="More Stories Available Soon"></button>
         <button id="hbLibrary2Store" class="hitbox" aria-label="Store"></button>
+
         <button id="hbRow4" class="hitbox" aria-label="Story Row 5"></button>
         <button id="hbRow5" class="hitbox" aria-label="Story Row 6"></button>
         <button id="hbRow6" class="hitbox" aria-label="Story Row 7"></button>
         <button id="hbRow7" class="hitbox" aria-label="Story Row 8"></button>
+      </section>
+
+      <!-- LIBRARY — PAGE 3 -->
+      <section id="screen-library-3" class="screen" data-screen="library3" aria-label="Library Page 3">
+        <img class="screen-bg" alt="Library Page 3" src="./backgrounds/ui/global/library-pre-render-page3.webp" />
+        <div class="libraryRowLabel" id="libLabel8" data-row="8"></div>
+        <div class="libraryRowLabel" id="libLabel9" data-row="9"></div>
+        <div class="libraryRowLabel" id="libLabel10" data-row="10"></div>
+        <div class="libraryRowLabel" id="libLabel11" data-row="11"></div>
+
+        <button id="hbLibrary3Back" class="hitbox" aria-label="Back to Library Page 2"></button>
+        <button id="hbLibrary3Store" class="hitbox" aria-label="Store"></button>
+        <button id="hbLibrary3MoreSoon" class="hitbox" aria-label="More Stories Available Soon"></button>
+
+        <button id="hbRow8" class="hitbox" aria-label="Story Row 9"></button>
+        <button id="hbRow9" class="hitbox" aria-label="Story Row 10"></button>
+        <button id="hbRow10" class="hitbox" aria-label="Story Row 11"></button>
+        <button id="hbRow11" class="hitbox" aria-label="Story Row 12"></button>
       </section>
 
       <!-- LAUNCHER (Story Detail / Start / Continue) -->
@@ -176,22 +196,34 @@ Contact: [soundlogicitservices@gmail.com]
         <button id="hbLauncherContinue" class="hitbox" aria-label="Continue"></button>
       </section>
 
-      <!-- STORY (placeholder shell) -->
+      <!-- STORY (generic / lorecraft exception placeholder shell) -->
       <section id="screen-story" class="screen" data-screen="story" aria-label="Story">
         <img class="screen-bg" alt="Story" src="./styles/screens/ui/backgrounds/story-panel/lorecraft-story-panel-narrative.webp" />
 
-        <!-- NAV ONLY: this is the parchment scroll strip area under the logo -->
         <div class="story-top">
-          <!-- Keep Back text visible for calibration -->
           <button class="story-back" id="hbStoryBack" aria-label="Back to Library">Exit Story</button>
-          <!-- Title placeholder is present but hidden by CSS -->
-          <div class="story-title">Story Placeholder</div>
+          <div class="story-title">Story</div>
         </div>
 
-        <!-- Narrative viewport (ONLY this contains the scrolling text) -->
         <div class="story-shell">
-          <div class="story-text">VerseCraft™
-[...snip...]
+          <div class="story-text">
+VerseCraft™
+
+VerseCraft is a mobile-first interactive storytelling engine that blends classic Choose Your Own Adventure narrative design with light RPG mechanics, modern web technology, and a strong emphasis on visual presentation.
+
+This repository powers the VerseCraft Web Experience, deployed via GitHub Pages and optimized for mobile Safari (iOS).
+
+✨ What Is VerseCraft?
+
+VerseCraft is designed as a story engine, not just a single game.
+
+At its core, it supports:
+• Branching narrative paths
+• Story packs and modules
+• Archetype-driven perspectives
+• Inventory, stats, and progression (engine-backed)
+• Touch-first navigation using invisible hitboxes
+• Strong visual framing using illustrated UI panels and skins
           </div>
         </div>
       </section>
@@ -199,62 +231,26 @@ Contact: [soundlogicitservices@gmail.com]
     </div> <!-- /#screensContainer -->
   </div>
 
+  <!-- Clean template: single definition only (no duplicates) -->
   <template id="tplStoryScreen">
-  <section class="screen" data-screen="{{SCREEN_ID}}" aria-label="Story: {{TITLE}}">
-    <img class="screen-bg" alt="Story Panel" src="{{PANEL_BG}}" />
+    <section class="screen" data-screen="{{SCREEN_ID}}" aria-label="Story: {{TITLE}}">
+      <img class="screen-bg" alt="Story Panel" src="{{PANEL_BG}}" />
 
-    <!-- Optional soundtrack hook -->
-    <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
+      <div class="story-top">
+        <!-- NOTE: do NOT use duplicate IDs inside templates; use class + data-action -->
+        <button class="hitbox story-back"
+                data-action="go"
+                data-target="launcher"
+                aria-label="Exit Story"></button>
+        <div class="story-title">{{TITLE}}</div>
+      </div>
 
-    <!-- Top strip (matches your Story layout contract) -->
-    <div class="story-top">
-      <!-- Use your existing calibrated hitbox ID -->
-      <button class="hitbox" id="hbStoryBack" data-action="go" data-target="launcher" aria-label="Exit Story"></button>
-      <!-- Visible label (optional; can be styled or hidden) -->
-      <div class="story-title">{{TITLE}}</div>
-    </div>
-
-    <!-- Narrative viewport mount (so engine can inject text later) -->
-    <div class="story-shell">
-      <div class="story-text" data-role="storyText"></div>
-    </div>
-  </section>
-</template>
-
-    <!-- Optional soundtrack hook (safe to ignore for now) -->
-    <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
-
-    <!-- EXIT STORY: uses existing .story-back styling/placement from story.css -->
-    <div class="story-top">
-      <button class="story-back"
-              data-action="go"
-              data-target="launcher"
-              aria-label="Exit Story">Exit Story</button>
-      <div class="story-title">Story</div>
-    </div>
-
-    <!-- Placeholder runtime mount point (for the next step) -->
-    <div class="story-shell">
-      <div class="story-text" data-role="storyText"></div>
-    </div>
-  </section>
-</template>
-
-      <!-- Optional soundtrack hook (can stay empty if not used yet) -->
-      <audio data-soundtrack="{{SOUNDTRACK}}" preload="auto"></audio>
-
-      <!-- Back hitbox for generated story screens -->
-      <button class="hitbox" data-action="go" data-target="launcher" aria-label="Back"></button>
+      <div class="story-shell">
+        <div class="story-text" data-role="storyText"></div>
+      </div>
     </section>
   </template>
 
-  <!-- Footer + Debug toggle -->
-  <div id="footer" class="footer">
-    VerseCraft v0.0.07 <span class="footer-spacer">•</span>
-    <button id="btnDebug" class="footer-btn" type="button">Debug</button>
-  </div>
-
-  <script type="module" src="./src/app.js?v=0.0.06"></script>
-  <script type="module" src="./src/debug-hitbox-editor.js?v=0.0.06"></script>
+  <script type="module" src="./src/app.js?v=0.0.07"></script>
 </body>
 </html>
