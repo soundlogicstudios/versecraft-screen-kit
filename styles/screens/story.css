@@ -78,7 +78,31 @@
   pointer-events: none;
   user-select: none;
 }
+/* =========================================================
+   STORY — Exit Story Label (BOUND TO hbStoryBack)
+   ========================================================= */
 
+#screen-story #lblStoryBack{
+  position: absolute;
+
+  /* 🔒 MATCH hbStoryBack hitbox geometry */
+  left: 0%;
+  top: 1.27%;
+  width: 20.93%;
+  height: 7.84%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font: 800 16px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 2px 10px rgba(0,0,0,.75);
+
+  z-index: 60;           /* above story art */
+  pointer-events: none; /* never steal taps */
+  user-select: none;
+}
 /* This is the StoryScroll container (mirror of #screen-tos .tos-scroll) */
 #screen-story .story-text{
   flex: 1 1 auto;
