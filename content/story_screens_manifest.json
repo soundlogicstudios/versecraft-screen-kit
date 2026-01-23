@@ -8,7 +8,7 @@
       "storyId": "world_of_lorecraft",
       "title": "World of Lorecraft",
       "assets": {
-        "panelBg": "./styles/screens/ui/backgrounds/story-panel/lorecraft-narrative-panel.webp",
+        "panelBg": "./styles/screens/ui/backgrounds/story-panel/lorecraft-story-panel-narrative.webp",
         "soundtrack": ""
       }
     },
